@@ -1,0 +1,36 @@
+---
+- name: install-nodejs | Ensure if nodejs has already installed
+  stat:
+    path: /usr/bin/node
+  register: node_bin
+
+- name: install-nodejs | Add Nodejs’s official GPG key
+  get_url:
+    url: https://deb.nodesource.com/setup_{{ nodejs_version }}.x
+    dest: /tmp/node_setup.sh
+    mode: 700
+  when: node_bin.stat.exists == false
+
+- name: install-nodejs | Add Nodejs’s official GPG key
+  shell: /tmp/node_setup.sh
+  when: node_bin.stat.exists == false
+
+- name: install-nodejs | Install Nodejs
+  apt:
+    pkg: nodejs
+  when: node_bin.stat.exists == false
+
+- name: install-nodejs | Install dependencies
+  apt:
+    pkg: "{{ item }}"
+  with_items:
+    - build-essential
+    - python
+
+- name: install-nodejs | Install yarn
+  npm:
+    name: "{{ item }}"
+    global: yes
+  with_items:
+    - yarn
+    - pm2

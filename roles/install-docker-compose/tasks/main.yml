@@ -1,0 +1,17 @@
+---
+- name: install-docker-compose | Ensure if docker-compose has already installed
+  stat:
+    path: /usr/local/bin/docker-compose
+  register: docker_compose_bin
+
+- name: install-docker-compose | Installing python3-pip
+  apt:
+    pkg: python3-pip
+  when: docker_compose_bin.stat.exists == false
+
+- name: install-docker-compose | Installing docker-compose
+  pip:
+    name: docker-compose
+    version: "{{ docker_compose_version if docker_compose_version else omit }}"
+    state: present
+  when: docker_compose_bin.stat.exists == false
