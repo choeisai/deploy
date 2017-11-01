@@ -1,0 +1,7 @@
+---
+# Install docker
+- hosts: all
+  roles:
+    - install-nodejs
+  vars:
+    nodejs_version: 8

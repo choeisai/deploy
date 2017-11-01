@@ -1,0 +1,8 @@
+---
+# Install docker
+- hosts: all
+  roles:
+    - install-docker
+    - install-docker-compose
+  vars:
+    docker_compose_version: 1.16.1
